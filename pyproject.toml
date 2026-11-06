@@ -19,6 +19,9 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+skill-linter = "skill_linter.__main__:main"
+
 [project.urls]
 Homepage = "https://github.com/Trysac/u029-skill-linter"
 Source = "https://github.com/Trysac/u029-skill-linter"

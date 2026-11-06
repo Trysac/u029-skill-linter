@@ -1,21 +1,26 @@
-"""Lint agent skill folders (SKILL.md) against the Agent Skills format: frontmatter, name rules, description limits, trigger cues and broken links"""
+"""Lint agent skill folders (SKILL.md) against the Agent Skills format."""
 
 from __future__ import annotations
 
-__all__ = ["__version__", "normalize"]
+import logging
+
+from .errors import SkillLintError
+from .linter import LintResult, lint_skill, lint_tree
+from .models import Finding, LintConfig
+from .rules import RULES, Rule
+
+__all__ = [
+    "RULES",
+    "Finding",
+    "LintConfig",
+    "LintResult",
+    "Rule",
+    "SkillLintError",
+    "__version__",
+    "lint_skill",
+    "lint_tree",
+]
 
 __version__ = "0.1.0"
 
-
-def normalize(value: str) -> str:
-    """Return ``value`` trimmed and lower-cased.
-
-    Placeholder API created by the template: replace it with the utility's real behavior.
-
-    Raises:
-        ValueError: if ``value`` is empty or only whitespace.
-    """
-    cleaned = value.strip()
-    if not cleaned:
-        raise ValueError("value must not be empty")
-    return cleaned.lower()
+logging.getLogger(__name__).addHandler(logging.NullHandler())

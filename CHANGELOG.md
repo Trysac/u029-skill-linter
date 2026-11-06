@@ -9,4 +9,5 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- Add `skill_linter`: lint agent skill folders (`SKILL.md`) with rules S000-S009 (frontmatter, name, description, trigger cue, body budget, link targets), `lint_skill`/`lint_tree` and a `python -m skill_linter` CLI with text and JSON output.
 - Initial project structure from the factory utility template.
