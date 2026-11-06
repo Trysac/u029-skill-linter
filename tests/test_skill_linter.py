@@ -117,9 +117,7 @@ def test_optional_fields(tmp_path: Path) -> None:
     text = GOOD.replace("---\n", "---\n", 1)[:-4] + "metadata: nope\n---\n"
     assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", text))] == [("S001", 4)]
     text = GOOD[:-4] + "compatibility: " + "x" * 501 + "\n---\n"
-    assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", text))] == []
-    text = text.replace("name: a", "name: b")
-    assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "b", text))] == [("S004", 4)]
+    assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", text))] == [("S004", 4)]
     text = GOOD[:-4] + "compatibility: " + "x" * 500 + "\nmetadata:\n  k: v\n---\n"
     assert lint_skill(write_skill(tmp_path, "a", text)) == []
 
