@@ -18,7 +18,20 @@ from skill_linter.links import iter_link_targets, normalize_target
 from skill_linter.textutil import quote
 
 GOOD = "---\nname: a\ndescription: Use when x\n---\n"
-needs_symlink = pytest.mark.skipif(not hasattr(os, "symlink"), reason="no symlink support")
+def _can_symlink() -> bool:
+    import tempfile
+
+    if not hasattr(os, "symlink"):
+        return False
+    with tempfile.TemporaryDirectory() as tmp:
+        try:
+            os.symlink(Path(tmp) / "t", Path(tmp) / "l")
+        except (OSError, NotImplementedError):
+            return False
+    return True
+
+
+needs_symlink = pytest.mark.skipif(not _can_symlink(), reason="no symlink support")
 
 OK_LINKS = (
     '[a](refs/ok.md "T")\n'
@@ -102,7 +115,7 @@ def test_optional_fields(tmp_path: Path) -> None:
     text = GOOD.replace("---\n", "---\n", 1)[:-4] + "metadata: nope\n---\n"
     assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", text))] == [("S001", 4)]
     text = GOOD[:-4] + "compatibility: " + "x" * 501 + "\n---\n"
-    assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "b", text))] == []
+    assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", text))] == []
     text = text.replace("name: a", "name: b")
     assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "b", text))] == [("S004", 4)]
     text = GOOD[:-4] + "compatibility: " + "x" * 500 + "\nmetadata:\n  k: v\n---\n"
@@ -267,7 +280,7 @@ def test_adjacent_links_are_both_checked(tmp_path: Path) -> None:
 def test_fence_handling(tmp_path: Path) -> None:
     body = "```\n~~~\n[a](m.md)\n```\n[b](after.md)\n"
     assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", GOOD + body))] == [
-        ("S007", 8)
+        ("S007", 9)
     ]
     body = "````\n```\n[a](m.md)\n````\n[b](after.md)\n"
     assert [(f.rule, f.line) for f in lint_skill(write_skill(tmp_path, "a", GOOD + body))] == [
