@@ -579,7 +579,7 @@ def test_parse_fence_errors() -> None:
         (["name: [a, b]"], 2),
         (["name: {a: b}"], 2),
         (["name: 'abc"], 2),
-        (["name: \"abc"], 2),
+        (['name: "abc'], 2),
         (['name: "a\\qb"'], 2),
         (['name: "abc\\'], 2),
         (["name: 'a' b"], 2),
