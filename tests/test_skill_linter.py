@@ -18,6 +18,8 @@ from skill_linter.links import iter_link_targets, normalize_target
 from skill_linter.textutil import quote
 
 GOOD = "---\nname: a\ndescription: Use when x\n---\n"
+
+
 def _can_symlink() -> bool:
     import tempfile
 
